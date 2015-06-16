@@ -30,7 +30,7 @@ public class TouchAbstract : MonoBehaviour {
 	public static int touchId; //id of current touch, accessible by other script
 	private Ray ray; //ray for screentoscene
 	private RaycastHit rayInfo; //get info from the raycast
-	public static GameObject touchedObject; //get touched current object, accessible by other script
+	public static GameObject touchedObject = Camera.main.transform.gameObject; //get touched current object, accessible by other script, default is Camera.main
 	public static float rayLength = Mathf.Infinity; //get ray length limit for rayCast, accessible by other script
 	private bool cast; //bool for cast
 	private RaycastHit2D hit; //ray for hit 2D
@@ -66,19 +66,19 @@ public class TouchAbstract : MonoBehaviour {
 					switch(touch.phase)
 					{
 					case TouchPhase.Began :
-						this.SendMessage("OnTouchBegan");
+						this.SendMessage("OnTouchBegan", SendMessageOptions.DontRequireReceiver);
 						break;
 					case TouchPhase.Canceled :
-						this.SendMessage("OnTouchCanceled");
+						this.SendMessage("OnTouchCanceled", SendMessageOptions.DontRequireReceiver);
 						break;
 					case TouchPhase.Ended :
-						this.SendMessage("OnTouchEnded");
+						this.SendMessage("OnTouchEnded", SendMessageOptions.DontRequireReceiver);
 						break;
 					case TouchPhase.Moved :
-						this.SendMessage("OnTouchMoved");
+						this.SendMessage("OnTouchMoved", SendMessageOptions.DontRequireReceiver);
 						break;
 					case TouchPhase.Stationary :
-						this.SendMessage("OnTouchStationary");
+						this.SendMessage("OnTouchStationary", SendMessageOptions.DontRequireReceiver);
 						break;
 					}
 				}
@@ -126,6 +126,46 @@ public class TouchAbstract : MonoBehaviour {
 		return zoomFactor;
 	}
 	/*/ Pinch Factor End /*/
+
+
+	/*/ Rotate byte touch Method /*/
+	//return tuple with swipX and swipY factor use it
+	//with eulerAngle new Vector3
+	//remindRotation : Vector3 eulerAngle of object touched for not to reset at zero
+	//Param : 
+	//speed : float speed fo the rotation 0 - 100
+	//clampX : Vector2 clamp rotation X  
+	//clampY : Vector2 clamp rotation Y
+	//invert : bool invert rotation
+	private float swipX;
+	private float swipY;
+	private Vector3 remindRotation;
+	private int invertInt;
+	public virtual Vector2 RotateTouchObject(Vector3 remindRotation, float speed, Vector2 clampX, Vector2 clampY, bool invert)
+	{
+		swipX = remindRotation.x;
+		swipY = remindRotation.y;
+		if(invert)
+		{
+			invertInt = -1;
+		}
+		else
+		{
+			invertInt = 1;
+		}
+		swipX = Input.GetTouch(touchId).deltaPosition.y * speed * invertInt * Time.deltaTime;
+		swipY = Input.GetTouch(touchId).deltaPosition.x * speed * -invertInt * Time.deltaTime;
+		if(clampX != Vector2.zero)
+		{
+			swipX = Mathf.Clamp(swipX, clampX[0], clampX[1]);
+		}
+		if(clampY != Vector2.zero)
+		{
+			swipY = Mathf.Clamp(swipY, clampY[0], clampY[1]);
+		}
+		return new Vector2(swipX, swipY);
+	}
+
 }
 
 

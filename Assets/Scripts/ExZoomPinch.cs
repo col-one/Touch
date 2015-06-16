@@ -29,9 +29,6 @@ public class ExZoomPinch : TouchAbstract {
 		zoom = PinchFactor();
 		Camera.main.transform.Translate(Vector3.forward*zoom*zoomSpeed*Time.deltaTime);
 	}
-	void OnTouchBegan()
-	{
-	}
 	void OnTouchEnded()
 	{
 	}

@@ -46,9 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\ExRotationTouch.cs" />
      <Compile Include="Assets\Scripts\ExSimpleTouch.cs" />
      <Compile Include="Assets\Scripts\ExZoomPinch.cs" />
      <Compile Include="Assets\Scripts\TouchAbstract.cs" />
+     <Compile Include="Assets\Scripts\tototest.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Volumes/DATA/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
